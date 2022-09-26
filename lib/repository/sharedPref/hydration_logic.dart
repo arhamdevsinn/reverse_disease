@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fitness_app_flutter/model/hydration-model.dart/hydration_model.dart';
 import 'package:fitness_app_flutter/repository/sharedPref/shared_pref.dart';
+import 'package:flutter/material.dart';
 
 import '../../utils/snakbar.dart';
 
@@ -38,6 +39,7 @@ class HydrationLogic {
       HydrationLogic2.addHydrationLogic2(data, "hydration2",context);
       // showSnackbar(context, "Data addes succesfully");
     }
+    Navigator.pop(context);
   }
 }
 /////////////////////////////////////

@@ -46,17 +46,7 @@ class _HydrationHistoryState extends State<HydrationHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var data = await HydrationPreferences.deleteData("hydration");
-          var data2 = await HydrationPreferences.deleteData("hydration2");
-
-          // var data= HydrationPreferences.readHydrationData("hydration2");
-
-          showSnackbar(context, "data deleted");
-          print(data2);
-        },
-      ),
+       
       body: NestedScrollView(
           physics: const NeverScrollableScrollPhysics(),
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

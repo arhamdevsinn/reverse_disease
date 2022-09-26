@@ -81,7 +81,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void onStepCountError(error) {
     print('onStepCountError: $error');
     setState(() {
-      _steps = 'Step Count not available';
+      // _steps = 'Step Count not available';
     });
   }
 
@@ -168,7 +168,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   onTap: () => Get.to(const HydrationHistory()),
                   child: hydrationContainer(context)),
               const SizedBox(height: 10),
-              showStepCount == false
+              !showStepCount!
                   ? Container(
                       height: 150,
                       width: MediaQuery.of(context).size.width,

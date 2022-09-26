@@ -55,11 +55,11 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: model == null
                 ? SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: const Center(
+                    height: MediaQuery.of(context).size.height,
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
-                )
+                  )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -73,24 +73,24 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                         color: insightsColor[0],
                         color2: insightsColor[1],
                         widget: InkWell(
-                          onTap: (){
+                          onTap: () {
                             // log("${model!.trending!.options!}");
-                              Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                      //           // fastingProtocolScreens[index]),
-                                CustomStoryView(
-                                  data:model!.trending!.toJson()['options'],
-                                ))
-                      );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        //           // fastingProtocolScreens[index]),
+                                        CustomStoryView(
+                                          data: model!.trending!
+                                              .toJson()['options'],
+                                        )));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              font18Textbold(text: model!.trending!.title
-                                          .toString()),
+                              font18Textbold(
+                                  text: model!.trending!.title.toString()),
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: Image.asset("images/breakfast.png",
@@ -120,25 +120,48 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[2],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[3],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.abcOfFasting![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                              // log("${ model!.abcOfFasting![0].toJson()["option"]}");
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.abcOfFasting![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[2],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[3],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.abcOfFasting![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[1],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[4],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.abcOfFasting![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.abcOfFasting![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[1],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[4],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.abcOfFasting![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -161,25 +184,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[7],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[5],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.whatCanIEat![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.whatCanIEat![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[7],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[5],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.whatCanIEat![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[2],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[6],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.abcOfFasting![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.whatCanIEat![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[2],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[6],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.whatCanIEat![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -202,25 +247,48 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[5],
-                            height: 150,
-                            width: 150,
-                            color: fastingProtocolColors[2],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.bodyAndMind![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.bodyAndMind![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[5],
+                              height: 150,
+                              width: 150,
+                              color: fastingProtocolColors[2],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.bodyAndMind![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[0],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[5],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.bodyAndMind![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: () {
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.bodyAndMind![1].toJson()["option"]
+                                        )));
+
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[0],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[5],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.bodyAndMind![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -243,25 +311,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[4],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[2],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.eatingHealthy![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.eatingHealthy![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[4],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[2],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.eatingHealthy![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[1],
-                            height: 150,
-                            width: 150,
-                            color: fastingProtocolColors[1],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.eatingHealthy![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.eatingHealthy![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[1],
+                              height: 150,
+                              width: 150,
+                              color: fastingProtocolColors[1],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.eatingHealthy![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -284,25 +374,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[7],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[5],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.fastingChallenge![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.fastingChallenge![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[7],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[5],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.fastingChallenge![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[0],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[6],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.fastingChallenge![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.fastingChallenge![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[0],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[6],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.fastingChallenge![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -325,25 +437,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[1],
-                            height: 150,
-                            width: 150,
-                            color: fastingProtocolColors[5],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.fastingExplained![0].title
-                                        .toString())),
+                          InkWell(
+                             onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.fastingExplained![0].toJson()["option"]
+                                        )));
+                             },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[1],
+                              height: 150,
+                              width: 150,
+                              color: fastingProtocolColors[5],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.fastingExplained![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            height: 150,
-                            color2: insightsColor[2],
-                            width: 150,
-                            color: allInsightsColor[4],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.fastingExplained![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: () {
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.fastingExplained![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              height: 150,
+                              color2: insightsColor[2],
+                              width: 150,
+                              color: allInsightsColor[4],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.fastingExplained![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -367,25 +501,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[4],
-                            height: 150,
-                            width: 150,
-                            color: insightsColor[2],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.healthyMovement![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (() {
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.healthyMovement![0].toJson()["option"]
+                                        )));
+                            }),
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[4],
+                              height: 150,
+                              width: 150,
+                              color: insightsColor[2],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.healthyMovement![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: abcFastingColors[1],
-                            height: 150,
-                            width: 150,
-                            color: insightsColor[1],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.healthyMovement![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: () {
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.healthyMovement![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: abcFastingColors[1],
+                              height: 150,
+                              width: 150,
+                              color: insightsColor[1],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.healthyMovement![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -408,25 +564,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            color2: insightsColor[0],
-                            height: 150,
-                            width: 150,
-                            color: fastingProtocolColors[5],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.healthyWeight![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.healthyWeight![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: insightsColor[0],
+                              height: 150,
+                              width: 150,
+                              color: fastingProtocolColors[5],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.healthyWeight![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: allInsightsColor[4],
-                            height: 150,
-                            width: 150,
-                            color: fastingProtocolColors[4],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.healthyWeight![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.healthyWeight![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: allInsightsColor[4],
+                              height: 150,
+                              width: 150,
+                              color: fastingProtocolColors[4],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.healthyWeight![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),
@@ -435,7 +613,7 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           font18Textbold(text: "Getting Started"),
-                           InkWell(
+                          InkWell(
                               onTap: () {
                                 Get.to(() => AllInsightsScreen(
                                       title: 'Getting Started',
@@ -449,25 +627,47 @@ class _InsightsDashBoardState extends State<InsightsDashBoard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InsightsDashBoardContainer(
-                            height: 150,
-                            color2: allInsightsColor[6],
-                            width: 150,
-                            color: fastingProtocolColors[3],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text:model!.gettingStarted![0].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.gettingStarted![0].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              height: 150,
+                              color2: allInsightsColor[6],
+                              width: 150,
+                              color: fastingProtocolColors[3],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.gettingStarted![0].title
+                                          .toString())),
+                            ),
                           ),
-                          InsightsDashBoardContainer(
-                            color2: fastingProtocolColors[2],
-                            height: 150,
-                            width: 150,
-                            color: allInsightsColor[6],
-                            widget: Center(
-                                child: font16Textbold(
-                                    text: model!.gettingStarted![1].title
-                                        .toString())),
+                          InkWell(
+                            onTap: (){
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomStoryView(
+                                          data:  model!.gettingStarted![1].toJson()["option"]
+                                        )));
+                            },
+                            child: InsightsDashBoardContainer(
+                              color2: fastingProtocolColors[2],
+                              height: 150,
+                              width: 150,
+                              color: allInsightsColor[6],
+                              widget: Center(
+                                  child: font16Textbold(
+                                      text: model!.gettingStarted![1].title
+                                          .toString())),
+                            ),
                           ),
                         ],
                       ),

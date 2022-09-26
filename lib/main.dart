@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             theme: ThemeData(fontFamily: "Campton"),
             debugShowCheckedModeBanner: false,
-            // home: const SplashScreen(),
-            home: CustomBottomNavigationBar(),
+            home: const SplashScreen(),
+            // home: CustomBottomNavigationBar(),
           );
         });
   }

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'constants/colors.dart';
 import 'customBotttomNav.dart';
+import 'fastingScreens/fastingProtocolScreen.dart';
 import 'model/auth-model/auth_user_model.dart';
 
 class SignUp extends StatefulWidget {
@@ -162,9 +163,13 @@ class _SignUpState extends State<SignUp> {
                             fireStoreData!.userAuthInfo(model.toJson());
                             showSnackbar(
                                 context, "Created account scucessfully");
-                            Future.delayed(const Duration(seconds: 2),(){
-                           Navigator.pop(context);
-                            });}
+                                Get.to(() => ChooseFastingProtocolScreen(
+                              checkBool: false,
+                            ));
+                            // Future.delayed(const Duration(seconds: 2),(){
+                          //  Navigator.pop(context);
+                            // });
+                            }
                           });
                         }
                       },

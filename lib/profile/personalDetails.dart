@@ -49,6 +49,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   Widget build(BuildContext context) {
     getName();
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(onPressed: (){
+      //   print(FirebaseAuth.instance.currentUser!.email);
+      // }),
       backgroundColor: whitecolor,
       appBar: AppBar(
         backgroundColor: whitecolor,
@@ -64,7 +67,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
           child: FutureBuilder(
    
               future: users
-                  .doc("initial-steps")
+                  .doc("initial-steps:${FirebaseAuth.instance.currentUser!.email}")
                   .get()
                   ,
               builder: (context,AsyncSnapshot snapshot) {

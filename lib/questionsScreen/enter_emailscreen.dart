@@ -7,6 +7,7 @@ import 'package:fitness_app_flutter/constants/colors.dart';
 import 'package:fitness_app_flutter/customBotttomNav.dart';
 import 'package:fitness_app_flutter/model/firestore_model/steps_model.dart';
 import 'package:fitness_app_flutter/repository/steps_storage.dart';
+import 'package:fitness_app_flutter/sign_up.dart';
 import 'package:fitness_app_flutter/utils/snakbar.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:fitness_app_flutter/widgets/myTextField.dart';
@@ -133,16 +134,17 @@ class _EnterEmailScreenState extends State<EnterEmailScreen> {
                           "event-date": widget.eventDate,
                           "email": emailController.text,
                         };
-                        StepsModel model = StepsModel.fromJson(data);
-                        log("${model.toJson()}");
-                        stepsStorage.enterData(model.toJson()).then((value) {
+                        // StepsModel model = StepsModel.fromJson(data);
+                        // log("${model.toJson()}");
+                        stepsStorage.enterData(data).then((value) {
                           print("this is $value");
                          
 
                         showSnackbar(context, "Data is added sucessfully");
-                        Get.to(() => ChooseFastingProtocolScreen(
-                              checkBool: checkRoute,
+                        Get.to(() => SignUp(
+                              
                             ));
+                        
                         
                         });
                        
