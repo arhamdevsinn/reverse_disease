@@ -17,6 +17,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/firestore_model/steps_model.dart';
+import '../repository/fastingPref/fasting_history_pref.dart';
 import '../widgets/customShadowContainer.dart';
 import 'LegalMainScreen.dart';
 
@@ -75,17 +76,17 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       backgroundColor: whitecolor,
       appBar: AppBar(
         backgroundColor: whitecolor,
         elevation: 0.0,
         actions: [
           InkWell(
-            onLongPress: ()async{
-              SharedPreferences preferences =await SharedPreferences.getInstance();
-             await preferences.remove("profilImage");
-            },
+              onLongPress: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                await preferences.remove("profilImage");
+              },
               onTap: () {
                 Get.to(() => const SettingScreen());
               },
@@ -138,8 +139,9 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                 Flexible(
                   child: FutureBuilder(
                       future: users
-                  .doc("initial-steps:${FirebaseAuth.instance.currentUser!.email}")
-                  .get(),
+                          .doc(
+                              "initial-steps:${FirebaseAuth.instance.currentUser!.email}")
+                          .get(),
                       builder: (context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData &&
                             snapshot.data != null &&
@@ -167,22 +169,62 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
               widget: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(
-                        3,
-                        (index) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                font16Textbold(
-                                    text: profileInfoList1Title[index]),
-                                const SizedBox(height: 5),
-                                font12Textnormal(
-                                    text: profileInfoList1Subtitle[index],
-                                    color: blackcolor.withOpacity(0.5))
-                              ],
-                            )),
-                  ),
+                  FutureBuilder<List>(
+                      future: FastingHistoryPref.readFastingHistory(
+                          "fastingHistory"),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          int totalFast = 0;
+                          int totalHour=0;
+                          var longestFast = 0;
+
+                          for (int i = 0; i < snapshot.data!.length; i++) {
+                            totalFast = i + 1;
+                            totalHour= totalHour +int.parse(snapshot.data![i]["fastingDuration"]
+                                      .substring(0, 2));
+                            for (int j = i + 1;
+                                j < snapshot.data!.length;
+                                j++) {
+                              if (int.parse(snapshot.data![i]["fastingDuration"]
+                                      .substring(0, 2)) <
+                                  int.parse(snapshot.data![j]["fastingDuration"]
+                                      .substring(0, 2))) {
+                                longestFast = int.parse(snapshot.data![i]
+                                        ["fastingDuration"]
+                                    .substring(0, 2));
+                              }
+                            }
+                          }
+                          List listData=[
+                            totalFast,
+                            totalHour.toString().padRight(2," h"),
+                            longestFast.toString().padRight(2," h"),
+                          ];
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(
+                                3,
+                                (index) => Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        font16Textbold(
+                                            // text: profileInfoList1Title[index],
+                                            text: listData[index].toString(),
+                                            ),
+                                        const SizedBox(height: 5),
+                                        font12Textnormal(
+                                            text:
+                                                profileInfoList1Subtitle[index],
+                                            color: blackcolor.withOpacity(0.5))
+                                      ],
+                                    )),
+                          );
+                        } else {
+                          return const SizedBox(
+                              child: Text("Loading Info...."));
+                        }
+                      }),
                   const SizedBox(height: 20),
                   FutureBuilder(
                       future: users
@@ -197,6 +239,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                           StepsModel model = StepsModel.fromJson(data.data());
                           List weight = [
                             model.weight,
+                            '0'.padRight(2,' kg'),
                             model.targetWight,
                           ];
 
@@ -211,7 +254,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                       children: [
                                         font16Textbold(
                                           // text: profileInfoList2Title[index]),
-                                          text: weight[index],
+                                          text: weight[index].toString(),
                                         ),
                                         const SizedBox(height: 5),
                                         font12Textnormal(

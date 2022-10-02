@@ -17,13 +17,6 @@ class _HydrationTabScreenState extends State<HydrationTabScreen> {
   @override
   Widget build(BuildContext context) {
     List<_SalesData> data = [
-      // _SalesData('24.08', 32),
-      // _SalesData('25.08', 28),
-      // _SalesData('26.08', 40),
-      // _SalesData('27.08', 12),
-      // _SalesData('28.08', 20),
-      // _SalesData('29.08', 22),
-      // _SalesData('30.08', 26)
     ];
     return FutureBuilder<List>(
    future: HydrationPreferences.readHydrationData("hydration"),      
@@ -51,6 +44,13 @@ class _HydrationTabScreenState extends State<HydrationTabScreen> {
                     dataLabelSettings: DataLabelSettings(isVisible: false)),
                 StackedBarSeries<_SalesData, String>(
                     dataSource: data,
+                    dataLabelMapper: ((datum, index) {
+                      for(int i=index;i<snapshot.data!.length;i++){
+
+                      return "${snapshot.data![i]["quantity"]} ml";
+                      }
+                      // // print(index.toString()+"ddddd");
+                    }),
                     spacing: 0.7,
                     xValueMapper: (_SalesData sales, _) => sales.year,
                     yValueMapper: (_SalesData sales, _) => sales.sales,

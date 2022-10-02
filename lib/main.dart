@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app_flutter/customBotttomNav.dart';
-import 'package:fitness_app_flutter/provider/loading_snakbar.dart';
 import 'package:fitness_app_flutter/provider/selcected_hours.dart';
 import 'package:fitness_app_flutter/provider/timer_status.dart';
 import 'package:fitness_app_flutter/role_selection_screen.dart';
@@ -37,7 +36,6 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => TimerStatus(),
           ),
-          ChangeNotifierProvider(create: (context) => LoadingSnakBar()),
         ],
         builder: (context, child) {
           return GetMaterialApp(
