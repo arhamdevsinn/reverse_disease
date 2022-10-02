@@ -123,12 +123,12 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                             // text: personalDetails
                                             //         .personalDetailsList[index]
                                             //     ["title"]),
-                                            text:list[index]["title"],),
+                                            text:list[index]["title"].toString(),),
                                         font16Textbold(
                                             // text: personalDetails
                                             //         .personalDetailsList[index]
                                             //     ["subTitle"])
-                                            text: list[index]["subtitle"]??"hell0"
+                                            text: list[index]["subtitle"].toString()
                                             
                                             ,)
                                       ],
@@ -138,26 +138,26 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 ),
                               )),
                     ),
-                    CustomButton(
-                        buttonText: "Download personal data",
-                        onTap: () {
+                    // CustomButton(
+                    //     buttonText: "Download personal data",
+                    //     onTap: () {
                          
-                        },
-                        color: fastingProtocolColors[4]),
+                    //     },
+                    //     color: fastingProtocolColors[4]),
                     const SizedBox(height: 10),
-                    CustomButton(
-                        buttonText: "Delete personal data",
-                        onTap: () {
-                          users;
-                         users.doc("initial-steps").delete().then((value){
-                          showSnackbar(context, "Deleted successfully");
-                         });
-                         setState(() {
+                    // CustomButton(
+                    //     buttonText: "Delete personal data",
+                    //     onTap: () {
+                    //       users;
+                    //      users.doc("initial-steps").delete().then((value){
+                    //       showSnackbar(context, "Deleted successfully");
+                    //      });
+                    //      setState(() {
                            
-                         });
-                        },
-                        color: themeColor),
-                    const SizedBox(height: 20),
+                    //      });
+                    //     },
+                    //     color: themeColor),
+                    // const SizedBox(height: 20),
                   ],
                 );}
                else{

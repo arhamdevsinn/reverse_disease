@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fitness_app_flutter/provider/loading_snakbar.dart';
 import 'package:fitness_app_flutter/repository/auth.dart';
 import 'package:fitness_app_flutter/repository/fire_store.dart';
 import 'package:fitness_app_flutter/repository/steps_storage.dart';
@@ -188,8 +187,7 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     const SizedBox(height: 30),
-                    Consumer<LoadingSnakBar>(builder: (context, value, child) {
-                      return CustomButton(
+                     CustomButton(
                         buttonText: "Sign Up",
                         color: themeColor,
                         onTap: () async {
@@ -251,8 +249,8 @@ class _SignUpState extends State<SignUp> {
                             }
                           }
                         },
-                      );
-                    }),
+                      ),
+                    
                     const SizedBox(height: 20),
                     Center(
                       child: RichText(

@@ -20,7 +20,7 @@ class HydrationLogic {
             (getData[i]["date"] == data.date)) {
           add = getData[i]["quantity"] + data.quantity;
           getData[i]["quantity"] = add;
-          // showSnackbar(context, "Data added successfully");
+          showSnackbar(context, "Hydration added successfully");
           await HydrationPreferences.saveHydrationData(getData, name);
           HydrationLogic2.addHydrationLogic2(data, "hydration2",context);
           flag = false;
@@ -30,7 +30,7 @@ class HydrationLogic {
         getData.add(data);
         await HydrationPreferences.saveHydrationData(getData, name);
         HydrationLogic2.addHydrationLogic2(data, "hydration2",context);
-        // showSnackbar(context, "Data added successfully");
+        showSnackbar(context, "Hydration added successfully");
       }
     } else {
       List<HydrationModel> list = [];
@@ -38,7 +38,7 @@ class HydrationLogic {
       list.add(data);
       await HydrationPreferences.saveHydrationData(list, name);
       HydrationLogic2.addHydrationLogic2(data, "hydration2",context);
-      // showSnackbar(context, "Data addes succesfully");
+      showSnackbar(context, "Hydration added succesfully");
     }
     // Navigator.pop(context);
       Navigator.of(context).push(MaterialPageRoute(

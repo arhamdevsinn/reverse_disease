@@ -1,14 +1,12 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_flutter/constants/colors.dart';
 import 'package:fitness_app_flutter/constants/strings.dart';
 import 'package:fitness_app_flutter/constants/textHelper.dart';
-import 'package:fitness_app_flutter/profile/settingScreen.dart';
 import 'package:fitness_app_flutter/statics/fastingTab.dart';
 import 'package:fitness_app_flutter/statics/weightTab.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import '../repository/fastingPref/fasting_history_pref.dart';
 import '../widgets/customShadowContainer.dart';
 import 'hydrationTab.dart';
@@ -26,6 +24,7 @@ class _StaticsMainScreenState extends State<StaticsMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+   
       backgroundColor: whitecolor,
       body: SingleChildScrollView(
           child: Padding(
@@ -46,11 +45,9 @@ class _StaticsMainScreenState extends State<StaticsMainScreen> {
                       builder: (context,snapshot) {
                           if(snapshot.hasData && snapshot.data!=null){
                       int totalFast=0;
-                      var longestFast=int.parse( snapshot.data![0]["fastingDuration"].substring(0,2));
-                      if(snapshot.hasData){
-                      
-
-                      }
+                    
+                      var longestFast= 0;
+                    
                         for(int i=0;i<snapshot.data!.length;i++){
                                  totalFast=i+1;
                                  for(int j=i+1;j<snapshot.data!.length;j++){

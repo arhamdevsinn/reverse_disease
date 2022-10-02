@@ -1,21 +1,14 @@
-import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_flutter/customBotttomNav.dart';
 import 'package:fitness_app_flutter/forget_password.dart';
-import 'package:fitness_app_flutter/provider/loading_snakbar.dart';
 import 'package:fitness_app_flutter/repository/auth.dart';
-import 'package:fitness_app_flutter/sign_up.dart';
 import 'package:fitness_app_flutter/utils/loading_dialogue.dart';
 import 'package:fitness_app_flutter/utils/snakbar.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:fitness_app_flutter/widgets/myTextField.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'constants/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -110,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
                   InkWell(
-                    onTap: () {                      
+                    onTap: () {
                       Get.to(const ForgetPassword());
                     },
                     child: Align(
@@ -125,51 +118,43 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Consumer<LoadingSnakBar>(builder: (context, value, child) {
-                    return CustomButton(
-                      buttonText: "Sign In",
-                      color: themeColor,
-                      onTap: () async {
-                        SharedPreferences preferences =
-                            await SharedPreferences.getInstance();
-                        var conectivity =
-                            await Connectivity().checkConnectivity();
-                        if (_formKey.currentState!.validate()) {
-                          // value.setLoading(false);
-                          print("clicked");
-                          if (conectivity == ConnectivityResult.wifi ||
-                              conectivity == ConnectivityResult.mobile) {
-                            loading(context: context);
+                  CustomButton(
+                    buttonText: "Sign In",
+                    color: themeColor,
+                    onTap: () async {
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      var conectivity =
+                          await Connectivity().checkConnectivity();
+                      if (_formKey.currentState!.validate()) {
+                        // value.setLoading(false);
+                        print("clicked");
+                        if (conectivity == ConnectivityResult.wifi ||
+                            conectivity == ConnectivityResult.mobile) {
+                          loading(context: context);
 
-                            var value1 = await Auth.loginUser(
-                                emailController.text,
-                                passController.text,
-                                context);
-                            if (value1 != null) {
-                    
-                              showSnackbar(context, "Login Sucessfully");
-                    
-                             await  preferences.setBool("authstatus", checkValue);
-                    
-                            Navigator.pop(context);  
-                              Get.off(() => CustomBottomNavigationBar());
-                              
+                          var value1 = await Auth.loginUser(
+                              emailController.text,
+                              passController.text,
+                              context);
+                          if (value1 != null) {
+                            showSnackbar(context, "Login Sucessfully");
 
-                              
-                              
- 
-                            }else{
+                            await preferences.setBool("authstatus", checkValue);
+
                             Navigator.pop(context);
-
-                            }
+                            Get.off(() => CustomBottomNavigationBar());
                           } else {
-                            // ignore: use_build_context_synchronously
-                            showSnackbar(context, "Check your Internet");
+                            Navigator.pop(context);
                           }
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          showSnackbar(context, "Check your Internet");
                         }
-                      },
-                    );
-                  }),
+                      }
+                    },
+                  ),
+
                   const SizedBox(height: 20),
                   // Center(
                   //   child: RichText(
