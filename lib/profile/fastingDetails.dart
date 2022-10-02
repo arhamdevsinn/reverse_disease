@@ -1,14 +1,9 @@
 import 'package:fitness_app_flutter/constants/colors.dart';
-import 'package:fitness_app_flutter/constants/strings.dart';
 import 'package:fitness_app_flutter/constants/textHelper.dart';
 import 'package:fitness_app_flutter/model/fastingModel/fasting_model.dart';
 import 'package:fitness_app_flutter/repository/fastingPref/fasting_history_pref.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FastingDetails extends StatefulWidget {
   const FastingDetails({Key? key}) : super(key: key);

@@ -4,12 +4,36 @@ import 'package:fitness_app_flutter/constants/textHelper.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:fitness_app_flutter/widgets/customShadowContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
+import '../model/fastingModel/fasting_model.dart';
+import '../provider/selcected_hours.dart';
+import '../provider/timer_status.dart';
+import '../repository/fastingPref/fasting_history_logic.dart';
+import '../timerScreens/timerMainScreen.dart';
+import '../utils/dialogue.dart';
 import 'fastingProtocolScreen.dart';
+extension on DateTime {
+  String myCusTime() {
+    return "${this.hour}:${this.minute}.${this.second}";
+  }
 
+  int hourInInt() {
+    return this.hour;
+  }
+
+  int minInInt() {
+    return this.minute;
+  }
+
+  int SecondInInt() {
+    return this.second;
+  }
+}
 class fastingPlanScreen extends StatefulWidget {
   const fastingPlanScreen({Key? key}) : super(key: key);
 
@@ -34,48 +58,27 @@ class _fastingPlanScreenState extends State<fastingPlanScreen> {
     }
   }
 
-  bool showTimerCount = false;
-
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer(
-    mode: StopWatchMode.countUp,
-    onChange: (value) => print('onChange $value'),
-    onChangeRawSecond: (value) => print('onChangeRawSecond $value'),
-    onChangeRawMinute: (value) => print('onChangeRawMinute $value'),
-    onStop: () {
-      print('onStop');
-    },
-    onEnded: () {
-      print('onEnded');
-    },
-  );
 
   final _scrollController = ScrollController();
   bool _isHours = true;
   bool onTimerStart = false;
-
+ var startingFastingTime;
+ String?   displayTime;
   @override
   void initState() {
     super.initState();
-    _stopWatchTimer.rawTime.listen((value) =>
-        print('rawTime $value ${StopWatchTimer.getDisplayTime(value)}'));
-    _stopWatchTimer.minuteTime.listen((value) => print('minuteTime $value'));
-    _stopWatchTimer.secondTime.listen((value) => print('secondTime $value'));
-    _stopWatchTimer.records.listen((value) => print('records $value'));
-    _stopWatchTimer.fetchStop.listen((value) => print('stop from stream'));
-    _stopWatchTimer.fetchEnded.listen((value) => print('ended from stream'));
-
-    /// Can be set preset time. This case is "00:01.23".
-    // _stopWatchTimer.setPresetTime(mSec: 1234);
+    
   }
 
   @override
   void dispose() async {
     super.dispose();
-    await _stopWatchTimer.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+        var hoursData = Provider.of<ProviderHourSelectd>(context, listen: false);
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -94,20 +97,20 @@ class _fastingPlanScreenState extends State<fastingPlanScreen> {
                           horizontal: 15, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children:  [
                           Text(
-                            "18:6",
-                            style: TextStyle(
+                            hoursData.housSelectd,
+                            style:const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 10),
-                          Text(
+                         const SizedBox(height: 10),
+                       const   Text(
                             "Fasting protocol",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 20),
-                          Text(
+                         const SizedBox(height: 20),
+                         const Text(
                             "This is your personal plan. You have a schedule, food recommendations, meal plan, etc.",
                             style: TextStyle(
                               fontSize: 18,
@@ -130,60 +133,89 @@ class _fastingPlanScreenState extends State<fastingPlanScreen> {
                     children: [
                       font14Textnormal(text: "Remaining eating time"),
                       const SizedBox(height: 5),
-                      Row(
+                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          StreamBuilder<int>(
-                            stream: _stopWatchTimer.rawTime,
-                            initialData: _stopWatchTimer.rawTime.value,
-                            builder: (context, snap) {
-                              final value = snap.data!;
-                              final displayTime = StopWatchTimer.getDisplayTime(
-                                  value,
-                                  milliSecond: false,
-                                  hours: _isHours);
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    displayTime,
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              );
+                          StreamBuilder<Map<String, dynamic>?>(
+                            stream: FlutterBackgroundService().on("update"),
+                            builder: (context, snapshot) {
+                             
+
+                              return Consumer<TimerStatus>(
+                                  builder: (context, value, child) {
+                                    if(snapshot.hasData){
+                                 displayTime=    DateFormat.Hms().format( DateTime.parse(
+                                      snapshot.data?['current_date'])).toString() ;
+                                    }
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    (snapshot.data?["current_date"] != null &&
+                                            value.timerStatusValue == true)
+                                        ? Text(
+                                            // DateTime.parse(snapshot
+                                            //         .data!['current_date'])
+                                            //     .myCusTime(),
+                                            DateFormat.Hms().format( DateTime.parse(
+                                      snapshot.data?['current_date'])).toString() ,
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        : const Text(
+                                            "00:00:00",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                  ],
+                                );
+                              });
+                           
                             },
                           ),
-                          Container(
-                            child: showTimerCount == true
-                                ? MaterialButton(
-                                    shape: const StadiumBorder(),
-                                    color: themeColor,
-                                    onPressed: () {
-                                      setState(() {
-                                        _stopWatchTimer.onExecute
-                                            .add(StopWatchExecute.stop);
-                                        showTimerCount = false;
-                                      });
-                                    },
-                                    child: font16Textbold(
-                                        text: "Cancel", color: whitecolor))
-                                : MaterialButton(
-                                    shape: const StadiumBorder(),
-                                    color: themeColor,
-                                    onPressed: () {
-                                      setState(() {
-                                        _stopWatchTimer.onExecute
-                                            .add(StopWatchExecute.start);
-                                        onTimerStart = true;
-                                      });
-                                    },
-                                    child: font16Textbold(
-                                        text: "Start", color: whitecolor)),
-                          )
+                          Consumer<TimerStatus>(
+                              builder: (context, value, child) {
+                            return Container(
+                              child: value.timerStatusValue == true
+                                  ? MaterialButton(
+                                      shape: const StadiumBorder(),
+                                      color: themeColor,
+                                      onPressed: ()async {
+                                       
+                                       final service = FlutterBackgroundService();
+                                var isRunning = await service.isRunning();
+                                if (isRunning) {
+                                  service.invoke("stopService");
+                                } else {
+                                  service.startService();
+                                }
+                                 saveDataDialog(
+                                    context: context,
+                                    fastingTime: displayTime??"",
+                                    startTime: startingFastingTime);
+                                        value.setTimerStatus(false);
+                                      },
+                                      child: font16Textbold(
+                                          text: "Cancel", color: whitecolor))
+                                  : MaterialButton(
+                                      shape: const StadiumBorder(),
+                                      color: themeColor,
+                                      onPressed: () {
+                                          startingFastingTime = DateFormat.yMd()
+                                    .add_jm()
+                                    .format(DateTime.now());             
+                                        setTime();
+                                        initializeService();
+                                       value.setTimerStatus(true);
+                                      },
+                                      child: font16Textbold(
+                                          text: "Start", color: whitecolor)),
+                            );
+                          })
                         ],
                       ),
+                     
                       const SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

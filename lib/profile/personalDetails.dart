@@ -25,33 +25,16 @@ class PersonalDetails extends StatefulWidget {
 class _PersonalDetailsState extends State<PersonalDetails> {
   PersonalDetailsModel personalDetails = PersonalDetailsModel();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  var nameModel;
-  Future getName() async {
-    // var data =
-       return await users.doc(FirebaseAuth.instance.currentUser!.uid).get().
-        then((value) {
-      dynamic v = value.data() as Map;
-    // print(v.runtimeType);
-      if ( FirebaseAuth.instance.currentUser!.email == v["email"]) {
-        return nameModel =
-            AuthUserModel.fromJson(value.data() as Map<String, dynamic>);
-      }
-    });
-       
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getName();
   }
   @override
   Widget build(BuildContext context) {
-    getName();
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(onPressed: (){
-      //   print(FirebaseAuth.instance.currentUser!.email);
-      // }),
+   
       backgroundColor: whitecolor,
       appBar: AppBar(
         backgroundColor: whitecolor,
@@ -80,7 +63,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 List list = [
                   {
                     "title": "Name",
-                    "subtitle": nameModel.name??"",
+                    "subtitle": model.name??"",
                   },
                 {
                  "title": "Gender",
@@ -119,7 +102,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 ];
                 
   
-                if(nameModel.email==model.email){
+                if(FirebaseAuth.instance.currentUser!.email==model.email){
 
                 return Column(
                   children: [

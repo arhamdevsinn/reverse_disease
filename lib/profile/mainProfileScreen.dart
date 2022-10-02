@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +12,11 @@ import 'package:fitness_app_flutter/model/auth-model/auth_user_model.dart';
 import 'package:fitness_app_flutter/profile/settingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../model/firestore_model/steps_model.dart';
 import '../widgets/customShadowContainer.dart';
 import 'LegalMainScreen.dart';
 
@@ -22,40 +28,74 @@ class MainProfileScreen extends StatefulWidget {
 }
 
 class _MainProfileScreenState extends State<MainProfileScreen> {
+  AuthUserModel? model;
 
- AuthUserModel? model;
-getData()async{
- var data=  FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
- data.get().then((value){
-model =AuthUserModel.fromJson(value.data() as Map<String,dynamic>);
- });
-}
-
-@override
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  @override
   void initState() {
     super.initState();
-    getData();
-  }  @override
-  
+  }
+
+  File? _image;
+  String? myImagePath;
+
+  Future getImage(ImageSource sorce) async {
+    try {
+      final image = await ImagePicker().pickImage(source: sorce);
+      if (image == null) return;
+
+      final imagePermanent = await saveFilePermanently(image.path);
+
+      setState(() {
+        // ignore: unnecessary_this
+        this._image = imagePermanent;
+      });
+    } catch (e) {}
+  }
+
+  Future<File> saveFilePermanently(String imagePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final directory = await getApplicationDocumentsDirectory();
+    final name = basename(imagePath);
+    final image = File("${directory.path}/$name");
+    setState(() {
+      prefs.setString("profilImage", image.path);
+    });
+
+    return File(imagePath).copy(image.path);
+  }
+
+  loadImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    myImagePath = prefs.getString("profilImage");
+    return myImagePath;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+     
       backgroundColor: whitecolor,
       appBar: AppBar(
         backgroundColor: whitecolor,
         elevation: 0.0,
         actions: [
           InkWell(
-            onTap: () {
-              Get.to(() => const SettingScreen());
+            onLongPress: ()async{
+              SharedPreferences preferences =await SharedPreferences.getInstance();
+             await preferences.remove("profilImage");
             },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-            ),
-          ),
+              onTap: () {
+                Get.to(() => const SettingScreen());
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+              )),
         ],
       ),
       body: SingleChildScrollView(
@@ -66,22 +106,59 @@ model =AuthUserModel.fromJson(value.data() as Map<String,dynamic>);
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  backgroundColor: themeColor,
-                  maxRadius: 30,
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: whitecolor,
-                  ),
+                InkWell(
+                  onTap: () {
+                    getImage(ImageSource.camera);
+                  },
+                  child: FutureBuilder(
+                      future: loadImage(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        log(snapshot.data.toString());
+                        if (snapshot.hasData && snapshot.data != null) {
+                          myImagePath = snapshot.data.toString();
+                          return CircleAvatar(
+                            backgroundColor: themeColor,
+                            maxRadius: 30,
+                            backgroundImage:
+                                FileImage(File(snapshot.data.toString())),
+                          );
+                        } else {
+                          return const CircleAvatar(
+                            backgroundColor: themeColor,
+                            radius: 30,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: whitecolor,
+                            ),
+                          );
+                        }
+                      }),
                 ),
                 const SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    font16Textbold(text:model?.name.toString()??"no name"),
-                    // font16Textbold(
-                        // text: "You have lost 2.1 kg", color: themeColor),
-                  ],
+                Flexible(
+                  child: FutureBuilder(
+                      future: users
+                  .doc("initial-steps:${FirebaseAuth.instance.currentUser!.email}")
+                  .get(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.data != null &&
+                            snapshot.data.data() != null) {
+                          DocumentSnapshot data =
+                              snapshot.data as DocumentSnapshot;
+                          model = AuthUserModel.fromJson(
+                              data.data() as Map<String, dynamic>);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              font16Textbold(text: model!.name.toString()),
+                            ],
+                          );
+                        } else {
+                          return const SizedBox(
+                              child: Text("Loading Info...."));
+                        }
+                      }),
                 )
               ],
             ),
@@ -101,28 +178,54 @@ model =AuthUserModel.fromJson(value.data() as Map<String,dynamic>);
                                     text: profileInfoList1Title[index]),
                                 const SizedBox(height: 5),
                                 font12Textnormal(
-                                    text: profileInfoList1Title[index],
+                                    text: profileInfoList1Subtitle[index],
                                     color: blackcolor.withOpacity(0.5))
                               ],
                             )),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(
-                        3,
-                        (index) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                font16Textbold(
-                                    text: profileInfoList2Title[index]),
-                                const SizedBox(height: 5),
-                                font12Textnormal(
-                                    text: profileInfoList2Subtitle[index],
-                                    color: blackcolor.withOpacity(0.5))
-                              ],
-                            )),
-                  )
+                  FutureBuilder(
+                      future: users
+                          .doc(
+                              "initial-steps:${FirebaseAuth.instance.currentUser!.email}")
+                          .get(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.data != null &&
+                            snapshot.data.data() != null) {
+                          DocumentSnapshot data = snapshot.data;
+                          StepsModel model = StepsModel.fromJson(data.data());
+                          List weight = [
+                            model.weight,
+                            model.targetWight,
+                          ];
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(
+                                // 3,
+                                weight.length,
+                                (index) => Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        font16Textbold(
+                                          // text: profileInfoList2Title[index]),
+                                          text: weight[index],
+                                        ),
+                                        const SizedBox(height: 5),
+                                        font12Textnormal(
+                                            text:
+                                                profileInfoList2Subtitle[index],
+                                            color: blackcolor.withOpacity(0.5))
+                                      ],
+                                    )),
+                          );
+                        } else {
+                          return const SizedBox(
+                              child: Text("Loading Info...."));
+                        }
+                      })
                 ],
               ),
             ),

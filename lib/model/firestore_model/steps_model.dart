@@ -1,6 +1,4 @@
-// To parse this JSON data, do
-//
-//     final stepsModel = stepsModelFromJson(jsonString);
+
 
 import 'dart:convert';
 import 'dart:developer';
@@ -28,7 +26,9 @@ class StepsModel {
       this.lastMeal,
       this.occasion,
       this.eventDate,
-      this.email});
+      this.email,
+      this.name
+      });
 
   String? gender;
   String? primaryGoal;
@@ -48,10 +48,10 @@ class StepsModel {
   dynamic occasion;
   dynamic eventDate;
   String? email;
+  String? name;
 
   factory StepsModel.fromJson(json) {
-    // print(json);
-    // log("$json");
+    
     return StepsModel(
         gender: json["gender"],
         primaryGoal: json["primary-goal"],
@@ -69,7 +69,9 @@ class StepsModel {
         lastMeal: json["last-meal"],
         occasion: json["occasion"],
         eventDate: json["event-date"],
-        email: json["email"]);
+        email: json["email"],
+        name: json["name"]
+        );
   }
 
   Map<String, dynamic> toJson() => {
@@ -90,6 +92,7 @@ class StepsModel {
         "occasion": occasion,
         "event-date": eventDate,
         "email": email,
+        "name":name
       };
 }
 

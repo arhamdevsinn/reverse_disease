@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:fitness_app_flutter/constants/textHelper.dart';
+import 'package:fitness_app_flutter/customBotttomNav.dart';
 import 'package:fitness_app_flutter/model/hydration-model.dart/hydration_model.dart';
 import 'package:fitness_app_flutter/model/liquidModel.dart';
 import 'package:fitness_app_flutter/repository/sharedPref/hydration_logic.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/colors.dart';
@@ -37,14 +39,15 @@ class _WaterTabScreenState extends State<WaterTabScreen> {
 
   TypeLiquidModel typeLiquidModel = TypeLiquidModel();
   LiquidModel liquidModel = LiquidModel();
-  var liquidType="regular";
-  var quantity =200;
-  TextEditingController controller=TextEditingController();
+  var liquidType = "regular";
+  var quantity = 200;
+  TextEditingController controller = TextEditingController();
   @override
   void dispose() {
     super.dispose();
     controller.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,7 +128,9 @@ class _WaterTabScreenState extends State<WaterTabScreen> {
                                 ),
                                 font14Textnormal(
                                   text: liquidModel.liquidModelData[index]
-                                      ["amount"].toString()+" ml",
+                                              ["amount"]
+                                          .toString() +
+                                      " ml",
                                   color: _selectedIndexx != null &&
                                           _selectedIndexx == index
                                       ? whitecolor
@@ -141,12 +146,10 @@ class _WaterTabScreenState extends State<WaterTabScreen> {
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(
                 controller: controller,
-              keyboardType:TextInputType.number,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   hintText: "Add Custom ml",
                 ),
-                
-                
               ),
             ),
             Padding(
@@ -154,18 +157,21 @@ class _WaterTabScreenState extends State<WaterTabScreen> {
                 child: CustomButton(
                     buttonText: "Add",
                     onTap: () async {
-                 
                       var data = {
                         "liquid": widget.type,
                         "liquietype": liquidType,
-                        "quantity":controller.text.isNotEmpty?int.parse(controller.text): quantity,
+                        "quantity": controller.text.isNotEmpty
+                            ? int.parse(controller.text)
+                            : quantity,
                         "date":
                             DateFormat.yMMMMd('en_US').format(DateTime.now()),
                       };
                       HydrationModel model = HydrationModel.fromJson(data);
-                    controller.clear();
-                      HydrationLogic.addHydrationLogic(model, "hydration",context);
+                      controller.clear();
+                      HydrationLogic.addHydrationLogic(
+                          model, "hydration", context);
                       // HydrationPreferences.deleteData();
+                    
                     },
                     color: themeColor))
           ],

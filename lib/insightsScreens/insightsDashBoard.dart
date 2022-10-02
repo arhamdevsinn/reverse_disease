@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app_flutter/constants/colors.dart';
 import 'package:fitness_app_flutter/constants/strings.dart';
 import 'package:fitness_app_flutter/insightsScreens/insightScreen1.dart';
 import 'package:fitness_app_flutter/model/insight.dart';
+import 'package:fitness_app_flutter/utils/globalState.dart';
+import 'package:fitness_app_flutter/utils/methods.dart';
 import 'package:fitness_app_flutter/widgets/insightsDashContainer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../constants/textHelper.dart';
 import 'AllInsightsScreen.dart';
-import "package:http/http.dart" as http;
 
 class InsightsDashBoard extends StatefulWidget {
   const InsightsDashBoard({Key? key}) : super(key: key);
@@ -26,20 +21,21 @@ class InsightsDashBoard extends StatefulWidget {
 class _InsightsDashBoardState extends State<InsightsDashBoard> {
   InsightModel? model;
   List list = [];
-  fun() async {
-    String data =
-        await DefaultAssetBundle.of(context).loadString("jason/data.json");
-    var jsonResult = jsonDecode(data);
-    model = InsightModel.fromJson(jsonResult);
-    // print(model!.whatCanIEat![0].option![0].toJson());
+  getInsights() async {
+    if(GlobalState.insightsList == null){
+      await fetchInsights(context);
+    model = GlobalState.insightsList; 
+
+    }else{
+    model = GlobalState.insightsList; 
+    }
     setState(() {});
-    //  list.add(model!);
   }
 
   @override
   void initState() {
     super.initState();
-    fun();
+    getInsights();
   }
 
   @override

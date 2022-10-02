@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_flutter/login_screen.dart';
 import 'package:fitness_app_flutter/repository/auth.dart';
+import 'package:fitness_app_flutter/utils/loading_dialogue.dart';
 import 'package:fitness_app_flutter/utils/snakbar.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:fitness_app_flutter/widgets/myTextField.dart';
@@ -71,19 +72,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     buttonText: "Password Reset",
                     color: themeColor,
                     onTap: () {
-                      var user = FirebaseAuth.instance.currentUser;
-                      if (_formKey3.currentState!.validate()) {
-                        if (user!.email == emailController.text) {
-                          alertDialog(passController, context);
-                           Auth.resetPassword( emailController.text,context).then((value){
-                          // Get.to(const LoginScreen());
-                          Navigator.pop(context);
+                      
+                      if (_formKey3.currentState!.validate()) {                     
+                        loading(context: context);                             
+                           Auth.resetPassword( emailController.text,context).then((value){                            
+                            Navigator.pop(context);
                         });
                       }
-                        } else {
-                          showSnackbar(context,
-                              "enter those mail when you use in signUp");
-                        }
+                        
                        
                     },
                   ),

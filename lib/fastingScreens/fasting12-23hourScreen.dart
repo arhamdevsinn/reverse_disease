@@ -1,16 +1,9 @@
-import 'dart:async';
-
 import 'package:fitness_app_flutter/constants/colors.dart';
 import 'package:fitness_app_flutter/constants/strings.dart';
-import 'package:fitness_app_flutter/constants/styles.dart';
-import 'package:fitness_app_flutter/questionsScreen/targetZone_screen.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../customBotttomNav.dart';
-import '../model/primaryGoal.dart';
 
 class Fasting12to23HourScreen extends StatefulWidget {
   bool? checkValue;

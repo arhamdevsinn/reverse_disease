@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app_flutter/customBotttomNav.dart';
+import 'package:fitness_app_flutter/provider/loading_snakbar.dart';
 import 'package:fitness_app_flutter/provider/selcected_hours.dart';
+import 'package:fitness_app_flutter/provider/timer_status.dart';
 import 'package:fitness_app_flutter/role_selection_screen.dart';
 import 'package:fitness_app_flutter/timerScreens/timerMainScreen.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var timeStatue = preferences.getBool("timerstate");
- timeStatue==true? await initializeService():null;
+  timeStatue == true ? await initializeService() : null;
 
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -27,8 +29,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ProviderHourSelectd(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => ProviderHourSelectd(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => TimerStatus(),
+          ),
+          ChangeNotifierProvider(create: (context) => LoadingSnakBar()),
+        ],
         builder: (context, child) {
           return GetMaterialApp(
             theme: ThemeData(fontFamily: "Campton"),

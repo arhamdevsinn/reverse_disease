@@ -109,8 +109,8 @@ List profileInfoList2Title = [
 ];
 List profileInfoList2Subtitle = [
   "start weight",
+  "goal weight",
   "current weight",
-  "goal weight"
 ];
 
 List<Map> profileCategories = [

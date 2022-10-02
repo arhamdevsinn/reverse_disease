@@ -15,9 +15,9 @@ class FastingHistoryModel {
         this.endFast,
     });
 
-    String? fastingDuration;
-    String? startFast;
-    String? endFast;
+    dynamic fastingDuration;
+    dynamic startFast;
+    dynamic endFast;
 
     factory FastingHistoryModel.fromJson(Map<String, dynamic> json) => FastingHistoryModel(
         fastingDuration: json["fastingDuration"],

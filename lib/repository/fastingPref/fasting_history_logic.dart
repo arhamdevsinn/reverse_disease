@@ -6,18 +6,19 @@ import '../../utils/snakbar.dart';
 
 class FastingHistoryLogic {
   static Future addFastigLogic({
-      FastingHistoryModel? data, name, context}) async {
+      // FastingHistoryModel?
+       data, name, context}) async {
     var getData = await FastingHistoryPref.readFastingHistory(name);
 
     if (getData.isNotEmpty) {
       getData.add(data);
       await HydrationPreferences.saveHydrationData(getData, name);
-      showSnackbar(context, "Data added succesfully");
+      showSnackbar(context, "Time saved succesfully");
     } else {
       List listData = [];
       listData.add(data);
       await HydrationPreferences.saveHydrationData(listData, name);
-      showSnackbar(context, "Data added succesfully");
+      showSnackbar(context, "Time save succesfully");
     }
   }
 }

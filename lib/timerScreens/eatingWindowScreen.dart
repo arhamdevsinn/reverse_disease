@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:fitness_app_flutter/constants/colors.dart';
@@ -5,11 +6,15 @@ import 'package:fitness_app_flutter/constants/strings.dart';
 import 'package:fitness_app_flutter/constants/textHelper.dart';
 import 'package:fitness_app_flutter/model/daysModel.dart';
 import 'package:fitness_app_flutter/provider/selcected_hours.dart';
+import 'package:fitness_app_flutter/timerScreens/timerMainScreen.dart';
 import 'package:fitness_app_flutter/widgets/customButton.dart';
 import 'package:fitness_app_flutter/widgets/customShadowContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../utils/snakbar.dart';
 
 class EatingWindowScreen extends StatefulWidget {
   @override
@@ -20,13 +25,23 @@ class EatingWindowScreenState extends State<EatingWindowScreen> {
   TimeOfDay endTime = TimeOfDay.now();
   TimeOfDay startTime = TimeOfDay.now();
   DaysModel daysModel = DaysModel();
-  
-    var time;
-    bool? check;
+
+  var time;
+  bool? check;
+  @override
+  void initState() {
+    super.initState();
+    fun();
+  }
+
+  fun() async {
+    await storeDaysModelData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var provider= Provider.of<ProviderHourSelectd>(context,listen: false);
- 
+    var provider = Provider.of<ProviderHourSelectd>(context, listen: false);
+    // fun();
     return Scaffold(
       backgroundColor: whitecolor,
       appBar: AppBar(
@@ -43,40 +58,40 @@ class EatingWindowScreenState extends State<EatingWindowScreen> {
           _buildTimePick("Start", true, startTime, (x) {
             setState(() {
               startTime = x;
-            
-             
-              print("The picked time is: ${endTime.replacing(hour: 23-1,minute: x.minute).format(context)}");
+              check = true;
+              int hour = int.parse(provider.housSelectd.substring(0, 2));
+              time = DateFormat("jm").format(DateTime(0, 0, 0, x.hour, x.minute)
+                  .add(Duration(hours: hour)));
+              print("The picked time is: ${x}");
             });
           }),
           const SizedBox(height: 10),
           _buildTimePick("End", true, endTime, (x) {
             setState(() {
               endTime = x;
-              
-              print("The picked time isv: ${startTime.replacing(hour: x.hour+22,minute: x.minute)}");
+              check = false;
+              int hour = int.parse(provider.housSelectd.substring(0, 2));
+              time = DateFormat("jm").format(DateTime(0, 0, 0, x.hour, x.minute)
+                  .add(Duration(hours: hour)));
+
+              print("The picked time isv: ${x})}");
             });
           }),
-
           const SizedBox(height: 20),
-                             Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: CustomShadowContainer(
                 widget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 font18Textbold(
-                  // text: startTime.format(context),
-                  text: check==false? startTime.replacing(hour:2,minute:endTime.minute ).format(context):startTime.format(context),
+                  text: check == false ? time : startTime.format(context),
                 ),
-                
                 const SizedBox(width: 10),
                 font18Textbold(text: "-"),
                 const SizedBox(width: 10),
                 font18Textbold(
-                  // text: endTime.format(context),
-                 text: check==true? endTime.replacing(hour:23-1,minute:endTime.minute  ).format(context):endTime.format(context),
-                
+                  text: check == true ? time : endTime.format(context),
                 ),
               ],
             )),
@@ -92,39 +107,90 @@ class EatingWindowScreenState extends State<EatingWindowScreen> {
                 font16Textnormal(
                     text: "On those days you take a break from fasting. Yay!"),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                      daysModel.daysModelData.length,
-                      (index) => InkWell(
-                            onTap: () => {
-                              setState(() {
-                                daysModel.daysModelData[index]["onSelect"] =
-                                    !daysModel.daysModelData[index]["onSelect"];
-                              })
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: daysModel.daysModelData[index]
-                                        ["onSelect"]
-                                    ? themeColor
-                                    : Colors.grey.withOpacity(0.2),
-                              ),
-                              child: font12Textnormal(
-                                  text: daysModel.daysModelData[index]["title"],
-                                  color: daysModel.daysModelData[index]
-                                          ["onSelect"]
-                                      ? whitecolor
-                                      : blackcolor),
-                            ),
-                          )),
+                SizedBox(
+                  height: 100,
+                  child: FutureBuilder<List>(
+                      future: getDaysModelData(),
+                      builder: (context, snapshot) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: List.generate(
+                              // daysModel.daysModelData.length,
+                              snapshot.data != []
+                                  ? snapshot.data!.length
+                                  : daysModel.daysModelData.length,
+                              (index) => InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        var itemLength;
+                                        for (int i = 0;
+                                            i < snapshot.data!.length;
+                                            i++) {
+                                          itemLength = i;
+                                        }
+                                        if (itemLength <
+                                                snapshot.data!.length - 1 ||
+                                            itemLength <
+                                                daysModel.daysModelData.length -
+                                                    1) {
+                                          daysModel.daysModelData[index]
+                                                  ["onSelect"] =
+                                              !daysModel.daysModelData[index]
+                                                  ["onSelect"];
+                                          var data = {
+                                            "index": index,
+                                            "title": daysModel
+                                                .daysModelData[index]["title"],
+                                            "onSelect":
+                                                daysModel.daysModelData[index]
+                                                    ["onSelect"],
+                                          };
+                                          storeDaysModelData(value: data);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:
+                                            // daysModel.daysModelData[index]
+                                            // ["onSelect"]
+                                            snapshot.data?[index]["onSelect"]
+                                                ? themeColor
+                                                : Colors.grey.withOpacity(0.2),
+                                      ),
+                                      child: font12Textnormal(
+                                          text: daysModel.daysModelData[index]
+                                              ["title"],
+                                          color: daysModel.daysModelData[index]
+                                                  ["onSelect"]
+                                              ? whitecolor
+                                              : blackcolor),
+                                    ),
+                                  )),
+                        );
+                      }),
                 ),
                 const SizedBox(height: 30),
-                CustomButton(buttonText: "Set", onTap: () {}, color: themeColor)
+                CustomButton(
+                    buttonText: "Set",
+                    onTap: () {
+                      check == null
+                          ? showSnackbar(context, "Select start time")
+                          : Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => TimerMainScreen(
+                                    startT: check == false
+                                        ? time
+                                        : startTime.format(context),
+                                    endT: check == true
+                                        ? time
+                                        : endTime.format(context),
+                                  )));
+                    },
+                    color: themeColor)
               ],
             ),
           ),
@@ -134,12 +200,11 @@ class EatingWindowScreenState extends State<EatingWindowScreen> {
   }
 
   Future selectedTime(BuildContext context, bool ifPickedTime,
-      TimeOfDay initialTime, Function(TimeOfDay ) onTimePicked) async {
+      TimeOfDay initialTime, Function(TimeOfDay) onTimePicked) async {
     var _pickedTime =
         await showTimePicker(context: context, initialTime: initialTime);
     if (_pickedTime != null) {
       onTimePicked(_pickedTime);
-      
     }
   }
 
@@ -171,5 +236,33 @@ class EatingWindowScreenState extends State<EatingWindowScreen> {
         ),
       ],
     );
+  }
+
+  storeDaysModelData({value}) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    bool flag = true;
+    // var data = pref.getString("daysModel");
+    var decodedData = await getDaysModelData();
+
+    if (decodedData != [] && decodedData.isNotEmpty) {
+      log("ggggggggggggggg ${decodedData}");
+      for (int i = 0; i < decodedData.length; i++) {
+        if (decodedData[i]["title"] == value["title"]) {
+          decodedData[i]["onSelect"] = value["onSelect"];
+          pref.setString("daysModel", jsonEncode(decodedData));
+        }
+      }
+    } else {
+      pref.setString("daysModel", jsonEncode(daysModel.daysModelData));
+    }
+  }
+
+  Future<List> getDaysModelData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var data = preferences.getString("daysModel");
+    if (data != null) {
+      return jsonDecode(data);
+    }
+    return [];
   }
 }

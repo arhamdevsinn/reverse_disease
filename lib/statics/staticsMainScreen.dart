@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fitness_app_flutter/constants/colors.dart';
 import 'package:fitness_app_flutter/constants/strings.dart';
 import 'package:fitness_app_flutter/constants/textHelper.dart';
@@ -6,6 +8,8 @@ import 'package:fitness_app_flutter/statics/fastingTab.dart';
 import 'package:fitness_app_flutter/statics/weightTab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import '../repository/fastingPref/fasting_history_pref.dart';
 import '../widgets/customShadowContainer.dart';
 import 'hydrationTab.dart';
 
@@ -37,21 +41,54 @@ class _StaticsMainScreenState extends State<StaticsMainScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(
-                          3,
-                          (index) => Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  font16Textbold(text: statisticsTitle[index]),
-                                  const SizedBox(height: 10),
-                                  font12Textnormal(
-                                      text: statisticssubTitle[index],
-                                      color: blackcolor.withOpacity(0.5))
-                                ],
-                              )),
+                    child: FutureBuilder<List>(
+                    future: FastingHistoryPref.readFastingHistory("fastingHistory"),
+                      builder: (context,snapshot) {
+                          if(snapshot.hasData && snapshot.data!=null){
+                      int totalFast=0;
+                      var longestFast=int.parse( snapshot.data![0]["fastingDuration"].substring(0,2));
+                      if(snapshot.hasData){
+                      
+
+                      }
+                        for(int i=0;i<snapshot.data!.length;i++){
+                                 totalFast=i+1;
+                                 for(int j=i+1;j<snapshot.data!.length;j++){
+                                  if(int.parse( snapshot.data![i]["fastingDuration"].substring(0,2))<int.parse( snapshot.data![j]["fastingDuration"].substring(0,2))){
+                                   longestFast=int.parse( snapshot.data![i]["fastingDuration"].substring(0,2));
+                                  }
+                                 }
+                        }
+                        String hour=longestFast.toString();
+                        List listData=[
+                          totalFast,
+                          longestFast.toString().padRight(2,"h"),
+                        ];
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(
+                              // snapshot.data!.length,
+                              listData.length,
+                              (index) => Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      font16Textbold(
+                                        // text: statisticsTitle[index]
+                                        text: listData[index].toString()
+                                        ),
+                                      const SizedBox(height: 10),
+                                      font12Textnormal(
+                                          text: statisticssubTitle[index],
+                                          color: blackcolor.withOpacity(0.5))
+                                    ],
+                                  )),
+                        );
+                          }
+                          else{
+                            return LinearProgressIndicator(color: themeColor,);
+                          }
+                      }
                     ),
                   ),
                 ],

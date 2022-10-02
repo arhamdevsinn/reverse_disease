@@ -7,8 +7,8 @@ import 'homeScreens/dashBoardScreen.dart';
 import 'insightsScreens/insightsDashBoard.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-   var dat;
-    CustomBottomNavigationBar({Key? key,this.dat}) : super(key: key);
+   
+    CustomBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
   _CustomBottomNavigationBarState createState() =>
