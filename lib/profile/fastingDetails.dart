@@ -31,82 +31,84 @@ class _FastingDetailsState extends State<FastingDetails> {
               return const Center(child: CircularProgressIndicator());
             }
             print(snapshot.data);
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: font28Textbold(text: "Fasting History"),
-                  ),
-                  Column(
-                      children: List.generate(
-                    snapshot.data!.length,
-                    (index) {
-                        FastingHistoryModel model=FastingHistoryModel.fromJson(snapshot.data![index]);
-                      return Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (val) async {
-                              snapshot.data!.removeAt(index);
-                              FastingHistoryPref.saveFastingHistory(snapshot.data, "fastingHistory");
-                              setState(() {
-                                
-                              });
-                            },
-                            backgroundColor: themeColor,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: 'Delete',
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+            return SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Padding(
+                    //   padding: const EdgeInsets.all(15.0),
+                    //   child: font28Textbold(text: "Fasting History"),
+                    // ),
+                    Column(
+                        children: List.generate(
+                      snapshot.data!.length,
+                      (index) {
+                          FastingHistoryModel model=FastingHistoryModel.fromJson(snapshot.data![index]);
+                        return Slidable(
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (val) async {
+                                snapshot.data!.removeAt(index);
+                                FastingHistoryPref.saveFastingHistory(snapshot.data, "fastingHistory");
+                                setState(() {
+                                  
+                                });
+                              },
+                              backgroundColor: themeColor,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete,
+                              label: 'Delete',
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                     Text("${model.fastingDuration}",style:
+                                      const TextStyle(fontWeight: FontWeight.bold),),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                   Text("${model.fastingDuration}",style:
-                                    const TextStyle(fontWeight: FontWeight.bold),),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                    Text("${
-                                      model.startFast} ",
-                                      style: TextStyle(color: Colors.grey.shade600,fontSize: 16.0),
-                                    ),
-                                   const SizedBox(height: 10,),
-                                    Text("${
-                                      model.endFast} ",
-                                      style:const TextStyle(color: Colors.black,fontSize: 16.0),
-                                    ),
-                              ],
-                                    )
-                                 
+                                      Text("${
+                                        model.startFast} ",
+                                        style: TextStyle(color: Colors.grey.shade600,fontSize: 16.0),
+                                      ),
+                                     const SizedBox(height: 10,),
+                                      Text("${
+                                        model.endFast} ",
+                                        style:const TextStyle(color: Colors.black,fontSize: 16.0),
+                                      ),
                                 ],
+                                      )
+                                   
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                              height: 2,
-                              child: Divider(
-                                thickness: 1,
-                                color: Colors.grey,
-                              ))
-                        ],
-                      ),
-                    );}
-                  )),
-                ]);
+                            const SizedBox(
+                                height: 2,
+                                child: Divider(
+                                  thickness: 1,
+                                  color: Colors.grey,
+                                ))
+                          ],
+                        ),
+                      );}
+                    )),
+                  ]),
+            );
           }),
     );
   }

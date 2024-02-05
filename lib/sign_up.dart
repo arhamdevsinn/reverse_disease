@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fitness_app_flutter/repository/auth.dart';
 import 'package:fitness_app_flutter/repository/fire_store.dart';
@@ -77,6 +79,7 @@ class _SignUpState extends State<SignUp> {
 
   FireStoreData? fireStoreData = FireStoreData();
   Widget build(BuildContext context) {
+    // Navigator.pop(context);
     return Scaffold(
       backgroundColor: whitecolor,
       appBar: AppBar(
@@ -191,9 +194,11 @@ class _SignUpState extends State<SignUp> {
                         buttonText: "Sign Up",
                         color: themeColor,
                         onTap: () async {
-                          var conectivity =
+                         try {
+                            var conectivity =
                               await Connectivity().checkConnectivity();
                           if (_formKey2.currentState!.validate()) {
+                            // debugger();
                             if (conectivity == ConnectivityResult.wifi ||
                                 conectivity == ConnectivityResult.mobile) {
                               var data = {
@@ -225,8 +230,9 @@ class _SignUpState extends State<SignUp> {
                               };
 
                               loading(context: context);
+
                               // ignore: use_build_context_synchronously
-                              Auth.crateUser(emailController.text,
+                              await Auth.crateUser(emailController.text,
                                       passController.text, context)
                                   .then((value) async {
                                 if (value != null) {
@@ -243,11 +249,20 @@ class _SignUpState extends State<SignUp> {
                                   });
                                   
                                 }
+                              }).catchError((onError){
+                                Navigator.pop(context);
                               });
+                                Navigator.pop(context);
+
                             } else {
                               showSnackbar(context, "Check your Internet");
                             }
                           }
+                         } catch (e) {
+                          showSnackbar(context, e.toString());
+                           Navigator.pop(context);
+                           debugger();
+                         }
                         },
                       ),
                     

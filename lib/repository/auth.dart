@@ -10,10 +10,12 @@ import 'package:flutter/material.dart';
 class Auth {
   static Future<dynamic> crateUser(email, password, context) async {
     try {
+      // debugger();
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
           return userCredential;
     } on FirebaseAuthException catch (e) {
+      // debugger();
       showSnackbar(context, e.message);
     } catch (e) {
       print("This is exception $e");

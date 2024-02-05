@@ -141,8 +141,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getInsights();
     var hoursData = Provider.of<ProviderHourSelectd>(context, listen: false);
     Provider.of<TimerStatus>(context, listen: false).checkTimerStatus();
+
 
     if (kDebugMode) {
       print("jgjg${hoursData.housSelectd}");
@@ -612,8 +614,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   InsightModel? model;
   getInsights() async {
+    // debugger();
     if (GlobalState.insightsList == null) {
       await fetchInsights(context);
+      model = GlobalState.insightsList;
+    }else{
       model = GlobalState.insightsList;
     }
     setState(() {});

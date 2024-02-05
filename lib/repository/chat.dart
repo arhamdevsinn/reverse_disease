@@ -5,7 +5,7 @@ class Chat{
    CollectionReference users =
       FirebaseFirestore.instance.collection("Chat");
   Future chatData(data) async {
-  return await users.doc("aw78001@gmail.com").collection("messages").add(data) ;
+  return await users.doc(FirebaseAuth.instance.currentUser?.email).collection("messages").add(data) ;
 
   }
 }

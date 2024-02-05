@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/colors.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,12 @@ void main() async {
   var timeStatue = preferences.getBool("timerstate");
   timeStatue == true ? await initializeService() : null;
 
-  await Firebase.initializeApp();
+await Firebase.initializeApp(
+   name: 'reverse-disease',
+
+    options: DefaultFirebaseOptions.currentPlatform,
+
+);
   runApp(const MyApp());
 }
 

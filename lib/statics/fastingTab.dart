@@ -24,7 +24,7 @@ class _FastingTabScreenState extends State<FastingTabScreen> {
         if(snapshot.hasData&&snapshot.data!=null&&snapshot.data!=[]){
         print(snapshot.data);
         for(int i=0;i<snapshot.data!.length;i++){
-               data.add(_SalesData(snapshot.data![i]["endFast"].substring(9,17),double.parse( snapshot.data![i]["fastingDuration"].substring(6,8))));
+               data.add(_SalesData(snapshot.data![i]["endFast"].substring(9,16),double.parse( snapshot.data![i]["fastingDuration"].substring(6,8))));
         }
         return Column(
           // mainAxisAlignment: MainAxisAlignment.center,

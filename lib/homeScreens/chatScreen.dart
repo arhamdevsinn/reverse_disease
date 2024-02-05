@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: StreamBuilder(
           stream: userChat
-              .doc("aw78001@gmail.com")
+              .doc(FirebaseAuth.instance.currentUser?.email)
               .collection("messages")
               .orderBy("messagetime", descending: true)
               .snapshots(),
